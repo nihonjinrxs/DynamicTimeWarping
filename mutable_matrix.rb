@@ -22,6 +22,12 @@ require "./matrix"
 
 class MutableMatrix < Matrix
   public :"[]=", :set_element, :set_component
+
+  def compute_affinity(matrix_1d, &distance_metric)
+    MutableMatrix.build row_size, matrix_1d.row_size do |i, j|
+      yield @self[0, i], @matrix_1d[0, j]
+    end
+  end
 end
 
 class MutableVector < Vector

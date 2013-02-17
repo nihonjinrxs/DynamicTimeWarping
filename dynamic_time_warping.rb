@@ -42,11 +42,13 @@ class DynamicTimeWarping
   end
 
   def compute
-    @sample_length_n, @template_length_m, @warping_path_length_k = sample.count, template.count, 1
+    @sample_length_n, @template_length_m, @warping_path_length_k = @sample.count, @template.count, 1
     min_global_distance = 0.0
-    local_distances = MutableMatrix.build @sample_length_n, @template_length_m do |i, j|
-      distance_between @sample[0, i], @template[0, j]
-    end
+    #local_distances = MutableMatrix.build @sample_length_n, @template_length_m do |i, j|
+    #  distance_between @sample[0, i], @template[0, j]
+    #end
+
+    local_distances = @sample.compute_affinity @template do |x, y| distance_between(x, y) end
 
     global_distances = MutableMatrix.zero @sample_length_n, @template_length_m
     global_distances[0, 0] = local_distances[0, 0]
