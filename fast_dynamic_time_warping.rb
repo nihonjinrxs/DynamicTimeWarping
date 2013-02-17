@@ -27,14 +27,15 @@ class FastDynamicTimeWarping < DynamicTimeWarping
     super sample, template
   end
 
-  def radius=(radius, recompute=true)
-    @radius = radius
-    results = self.compute if recompute
-    if results
-      @warping_path = results[:warping_path]
-      @warping_distance = results[:warping_distance]
-    end
-  end
+  add_new_setter_with_recompute :radius
+  #def radius=(radius, recompute=true)
+  #  @radius = radius
+  #  results = self.compute if recompute
+  #  if results
+  #    @warping_path = results[:warping_path]
+  #    @warping_distance = results[:warping_distance]
+  #  end
+  #end
 
   # Alias DynamicTimeWarping#compute for use within the overridden method
   alias :dtw_compute :compute

@@ -23,26 +23,22 @@ class DynamicTimeWarping
     end
   end
 
-  def sample=(sample, recompute=true)
-    @sample = sample
-    results = self.compute if recompute
-    if results
-      @warping_path = results[:warping_path]
-      @warping_distance = results[:warping_distance]
+  def self.add_new_setter_with_recompute(value_name)
+    define_method("#{value_name}=".to_sym) do |value, recompute=true|
+      instance_variable_set("@#{value_name}".to_sym, value)
+      results = self.compute if recompute
+      if results
+        @warping_path = results[:warping_path]
+        @warping_distance = results[:warping_distance]
+      end
     end
   end
 
-  def template=(template, recompute=true)
-    @template = template
-    results = self.compute if recompute
-    if results
-      @warping_path = results[:warping_path]
-      @warping_distance = results[:warping_distance]
-    end
-  end
+  add_new_setter_with_recompute :sample
+  add_new_setter_with_recompute :template
 
   def distance_between(x, y)
-    d = (x - y) * (x - y)
+    (x - y) * (x - y)
   end
 
   def compute
@@ -122,7 +118,7 @@ class DynamicTimeWarping
     end
     warping_path = new_warping_path
 
-    results = {warping_path: warping_path, warping_distance: warping_distance}
+    {warping_path: warping_path, warping_distance: warping_distance}
   end
 
   def testing_method
@@ -130,7 +126,7 @@ class DynamicTimeWarping
   end
 
   def to_s
-    string = "Warping Distance: #{@warping_distance}\nWarping Path: "
+    string = "Warping Distance: #{@warping_distance.to_s}\nWarping Path: "
     (0..@warping_path_length_k-1).each do |i|
       string += "(#{@warping_path[i,0]},#{@warping_path[i,1]}) "
     end
