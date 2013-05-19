@@ -38,17 +38,25 @@ class DynamicTimeWarping
   add_new_setter_with_recompute :template
 
   def distance_between(x, y)
-    (x - y) * (x - y)
+    if x.kind_of?(Vector) and y.kind_of?(Vector) then
+       x.inner_product y # Leaving out Math.sqrt due to cost.
+    else
+      (x - y) * (x - y)
+    end
   end
 
-  def compute
+  def compute(distance_function)
     @sample_length_n, @template_length_m, @warping_path_length_k = @sample.count, @template.count, 1
     min_global_distance = 0.0
+
+    distance = distance_function || method(:distance_between)
+
     #local_distances = MutableMatrix.build @sample_length_n, @template_length_m do |i, j|
     #  distance_between @sample[0, i], @template[0, j]
     #end
 
-    local_distances = @sample.compute_affinity @template do |x, y| distance_between(x, y) end
+    # local_distances = @sample.compute_affinity @template do |x, y| distance.call x, y end
+    local_distances = @sample.compute_affinity_multi @template do |x, y| distance.call x, y end
 
     global_distances = MutableMatrix.zero @sample_length_n, @template_length_m
     global_distances[0, 0] = local_distances[0, 0]
