@@ -39,7 +39,7 @@ class DynamicTimeWarping
 
   def distance_between(x, y)
     if x.kind_of?(Vector) and y.kind_of?(Vector) then
-       x.inner_product y # Leaving out Math.sqrt due to cost.
+       (x - y).inner_product (x - y) # Leaving out Math.sqrt due to cost.
     else
       (x - y) * (x - y)
     end
