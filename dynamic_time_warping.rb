@@ -45,11 +45,11 @@ class DynamicTimeWarping
     end
   end
 
-  def compute(distance_function)
+  def compute(options = {distance_function: method(:distance_between)})
     @sample_length_n, @template_length_m, @warping_path_length_k = @sample.count, @template.count, 1
     min_global_distance = 0.0
 
-    distance = distance_function || method(:distance_between)
+    distance = options[:distance_function] || method(:distance_between)
 
     #local_distances = MutableMatrix.build @sample_length_n, @template_length_m do |i, j|
     #  distance_between @sample[0, i], @template[0, j]
