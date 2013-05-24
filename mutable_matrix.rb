@@ -25,12 +25,12 @@ class MutableMatrix < Matrix
 
   def compute_affinity(matrix_1d, &distance_metric)
     MutableMatrix.build row_size, matrix_1d.row_size do |i, j|
-      yield @self[0, i], @matrix_1d[0, j]
+      yield self[0, i], @matrix_1d[0, j]
     end
   end
 
   def compute_affinity_multi(matrix, &distance_metric)
-    obs = @self.column_vectors
+    obs = self.column_vectors
     matrix_obs = matrix.column_vectors
     MutableMatrix.build row_size, matrix.row_size do |i, j|
       yield obs[i], matrix_obs[j]
