@@ -39,14 +39,14 @@ class DynamicTimeWarping
 
   def distance_between(x, y)
     if x.kind_of?(Vector) and y.kind_of?(Vector) then
-       (x - y).inner_product (x - y) # Leaving out Math.sqrt due to cost.
+      (x - y).inner_product (x - y) # Leaving out Math.sqrt due to cost.
     else
       (x - y) * (x - y)
     end
   end
 
   def compute(options = {distance_function: method(:distance_between)})
-    @sample_length_n, @template_length_m, @warping_path_length_k = @sample.count, @template.count, 1
+    @sample_length_n, @template_length_m, @warping_path_length_k = @sample.column_size, @template.column_size, 1
     min_global_distance = 0.0
 
     distance = options[:distance_function] || method(:distance_between)
@@ -185,6 +185,18 @@ if __FILE__ == $0
 
   dtw.template = signal2
   puts "sample = #{signal3}"
+  puts "template = #{signal2}"
+  puts dtw
+  puts ""
+
+  puts "Testing multidimensional signals..."
+  puts ""
+
+  signal1 = MutableMatrix[[2.1, 3.673, 2.05, 5.67, 3.673,2.05,5.67], [2.45, 4.32, 1.93, 6.01,4.32,2.05,6.01]]
+  signal2 = MutableMatrix[[1.5, 3.9, 1.1, 2.2, 3.3, 4.4], [4.1, 3.3, 1.1, 2.1, 3.1, 4.1]]
+
+  dtw = DynamicTimeWarping.new signal1, signal2
+  puts "sample = #{signal1}"
   puts "template = #{signal2}"
   puts dtw
   puts ""
